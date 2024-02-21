@@ -8,6 +8,8 @@ let educationInput;
 let summaryButton;
 let educationButton;
 
+let uploadButton;
+
 function preload() {
     // Load the image before the sketch starts
     img = loadImage('ibr.jpg');
@@ -16,17 +18,14 @@ function preload() {
 function setup() {
     createCanvas(800, 400); // Adjust canvas size to accommodate both image and text
     initializeInputs();
-    // Resize the image
-    img.resize(100, 0); // Resize image width to 100px and maintain aspect ratio
-    resizedImg = img;
-
-    // Display image
-    image(resizedImg, 50, 50); // Adjust image position
-
-    // Vertical line
-    stroke(0);
-    line(200, 0, 200, height); // Adjust x-coordinate to position the line
+    // Load the image
+    img = loadImage('ibr.jpg', function() {
+        // Resize the image
+        img.resize(100, 0); // Resize image width to 100px and maintain aspect ratio
+        resizedImg = img;
+    });
 }
+
 
 function initializeInputs() {
     // Title
@@ -46,6 +45,9 @@ function initializeInputs() {
 
     // Education button
     educationButton = createButton('Done').position(570, 300).mousePressed(confirmEducation);
+  
+      uploadButton = createFileInput(handleFile).position(250, 100); // Position the button below the "Summary" text
+
 
     // Display the saved summary
     textSize(16);
@@ -67,7 +69,6 @@ function confirmSummary() {
 
     // Display the summary
     textSize(14);
-    noFill();
     text(summary, 250, 120, width - 300); // Display the saved summary
 }
 
@@ -82,6 +83,26 @@ function confirmEducation() {
     // Display the education
     textFont('Arial')
     textSize(14);
-    noFill(); // Set no fill color (transparent fill)
-    text(education, 250, 240, width - 300); // Display the saved education
+   // Set no fill color (transparent fill)
+createP('');
+text(education, 250, 240, width - 300); // Display the saved education
+}
+
+function handleFile(file) {
+    if (file.type === 'image') {
+        img = createImg(file.data, '').hide();
+        img.size(100, 0); // Resize image width to 100px and maintain aspect ratio
+        resizedImg = img;
+        redraw(); // Redraw the canvas with the uploaded image
+    } else {
+        alert('Please upload an image file.');
+    }
+}
+
+function draw() {
+    background(255); // Clear the canvas
+    if (resizedImg) {
+        // Display image
+        image(resizedImg, 50, 50); // Adjust image position
+    }
 }
