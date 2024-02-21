@@ -10,28 +10,21 @@ let educationButton;
 
 let uploadButton;
 
-function preload() {
-    // Load the image before the sketch starts
-    img = loadImage('ibr.jpg');
-}
-
 function setup() {
     createCanvas(800, 400); // Adjust canvas size to accommodate both image and text
     initializeInputs();
-    // Load the image
-    img = loadImage('ibr.jpg', function() {
-        // Resize the image
-        img.resize(100, 0); // Resize image width to 100px and maintain aspect ratio
-        resizedImg = img;
-    });
-}
 
+    // Vertical line
+    stroke(0);
+    line(200, 0, 200, height); // Adjust x-coordinate to position the line
+}
 
 function initializeInputs() {
     // Title
     textFont('Arial');
     textSize(24);
     textAlign(CENTER);
+    fill(122, 24, 65);
     text("Ibrahim Bachiri", width / 2, 50);
 
     // Input field for the summary
@@ -45,9 +38,6 @@ function initializeInputs() {
 
     // Education button
     educationButton = createButton('Done').position(570, 300).mousePressed(confirmEducation);
-  
-      uploadButton = createFileInput(handleFile).position(250, 100); // Position the button below the "Summary" text
-
 
     // Display the saved summary
     textSize(16);
@@ -57,6 +47,9 @@ function initializeInputs() {
 
     // Display the saved education
     text("Education:", 250, 220); // Adjust x-coordinate to leave space for the image
+
+    // Button for downloading as PDF
+    uploadButton = createButton('Download as PDF').position(250, 360).mousePressed(downloadAsPDF);
 }
 
 function confirmSummary() {
@@ -83,26 +76,22 @@ function confirmEducation() {
     // Display the education
     textFont('Arial')
     textSize(14);
-   // Set no fill color (transparent fill)
-createP('');
-text(education, 250, 240, width - 300); // Display the saved education
+    fill(0)
+    // Set no fill color (transparent fill)
+    text(education, 250, 240, width - 300); // Display the saved education
 }
 
-function handleFile(file) {
-    if (file.type === 'image') {
-        img = createImg(file.data, '').hide();
-        img.size(100, 0); // Resize image width to 100px and maintain aspect ratio
-        resizedImg = img;
-        redraw(); // Redraw the canvas with the uploaded image
-    } else {
-        alert('Please upload an image file.');
-    }
-}
+function downloadAsPDF() {
+    var doc = new jsPDF();
 
-function draw() {
-    background(255); // Clear the canvas
-    if (resizedImg) {
-        // Display image
-        image(resizedImg, 50, 50); // Adjust image position
-    }
+    // Assuming `summary` and `education` are defined in this file
+    var summaryText = 'Summary: ' + summary;
+    var educationText = 'Education: ' + education;
+
+    // Add summary and education text to the PDF
+    doc.text(summaryText, 10, 20);
+    doc.text(educationText, 10, 40);
+
+    // Save the PDF
+    doc.save('summary_education.pdf');
 }
