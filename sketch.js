@@ -1,3 +1,6 @@
+// Import jsPDF in your sketch.js file
+import jsPDF from 'jspdf';
+
 let img;
 let resizedImg;
 let summary = ""; // Variable to store the summary text
